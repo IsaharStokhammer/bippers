@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Status } from "../models/types.js";
 import { v4 as uuidv4 } from "uuid";
 import { writeBeeperToJsonFile, readFromJsonFile, editBeeperToJsonFile, deleteBeeperFromJson } from "../DAL/jsonBeepers.js";
+import { Longitude, Latitude } from "../models/pointsInLebanon.js";
+const seqToBoom = 10;
 //CREATE
 export const createBeeperToJsonFile = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
@@ -42,7 +44,7 @@ export const getBeeperByIDFromJson = (beeperId) => __awaiter(void 0, void 0, voi
 });
 export const getBeepersByStatusFromJson = (status) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield getAllBeepersFromJson();
-    return beepers.filter((b) => b.status === status);
+    return beepers.filter((b) => b.status == status);
 });
 //UPDATE
 export const promoteStatusToJson = (id, LAT, LON) => __awaiter(void 0, void 0, void 0, function* () {
@@ -64,6 +66,7 @@ export const promoteStatusToJson = (id, LAT, LON) => __awaiter(void 0, void 0, v
         else if (currentStatus == 4) {
             if (isInLebanon(LAT, LON)) {
                 return `status promoted to ${currentStatus + 1} `;
+                boomTheBeeper(beeper, seqToBoom);
             }
             else {
                 return "invalid coordinates";
@@ -74,8 +77,20 @@ export const promoteStatusToJson = (id, LAT, LON) => __awaiter(void 0, void 0, v
         }
     }
 });
+const boomTheBeeper = (beeper, seqToBoom) => __awaiter(void 0, void 0, void 0, function* () {
+    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+        beeper.status = Status.detonated;
+        yield editBeeperToJsonFile(beeper, beeper);
+    }), seqToBoom * 1000);
+});
 export const isInLebanon = (LAT, LON) => {
-    return true;
+    if (LAT && LON) {
+        if (Latitude.includes(LAT) && Longitude.includes(LON)) {
+            return true;
+        }
+        return false;
+    }
+    return false;
 };
 //DELETE
 export const deleteBeeper = (beeperId) => __awaiter(void 0, void 0, void 0, function* () {

@@ -6,7 +6,9 @@ import {
     editBeeperToJsonFile,
     deleteBeeperFromJson
   } from "../DAL/jsonBeepers.js";
+import {Longitude, Latitude} from "../models/pointsInLebanon.js";
 
+const seqToBoom = 10;
   //CREATE
   export const createBeeperToJsonFile = async (name: string): Promise<string> => {
     const beepers : Beeper[]  = await readFromJsonFile();
@@ -45,7 +47,7 @@ import {
 
   export const getBeepersByStatusFromJson = async (status: Status): Promise<Beeper[]> => {
     const beepers : Beeper[]  = await getAllBeepersFromJson();
-    return beepers.filter((b) => b.status === status);
+    return beepers.filter((b) => b.status == status);
   }
 
   //UPDATE
@@ -67,6 +69,7 @@ export const promoteStatusToJson = async (id : string, LAT? : Number, LON? : Num
         else if(currentStatus == 4){ 
             if (isInLebanon(LAT , LON)){
                 return `status promoted to ${currentStatus+1} `;
+                boomTheBeeper((beeper as Beeper), seqToBoom);
             }
             else{
                 return "invalid coordinates";
@@ -78,8 +81,22 @@ export const promoteStatusToJson = async (id : string, LAT? : Number, LON? : Num
     }
 }
 
+const boomTheBeeper = async (beeper: Beeper, seqToBoom: number): Promise<void> => {
+    setTimeout(async () => {
+        (beeper as Beeper).status = Status.detonated;
+        await editBeeperToJsonFile((beeper as Beeper),(beeper as Beeper));
+    }, seqToBoom * 1000)
+
+
+}
 export const isInLebanon = (LAT: Number |undefined, LON: Number | undefined):boolean => {
-    return true
+    if(LAT && LON){    
+        if (Latitude.includes(LAT as number) && Longitude.includes(LON as number)) {
+            return true;
+        }
+        return false;
+    }
+    return false;
 }
 
 //DELETE

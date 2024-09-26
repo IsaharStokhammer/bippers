@@ -8,9 +8,9 @@ export interface Beeper {
     latPoint? : Number
 }
 export enum Status {
-    manufactured = 1, //יוצר
-    assembled = 2, // הורכב
-    shipped = 3, //נשלח
-    deployed = 4,// נפרס בלבנון
-    detonated = 5//התפוצץ
+    manufactured = 1, 
+    assembled = 2, 
+    shipped = 3, 
+    deployed = 4,
+    detonated = 5
   }

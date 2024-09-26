@@ -6,7 +6,7 @@ import exp from "constants";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const name: string = req.body;
+    const name: string = req.body.name;
 
     if (!name) {
       res.status(400).json({ error: "name is required" });
@@ -68,6 +68,17 @@ export const deleteById = async (req: Request, res: Response): Promise<void> => 
     res.status(204).json();
   } catch (error: any) {
     console.error("Error deleting beeper:", error);
+    res.status(500).json({ error: "Internal server error.🙄" });
+  }
+}
+
+export const getBeepersByStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { status } = req.params;
+    const beepers = await getBeepersByStatusFromJson(status as unknown as Status);
+    res.status(200).json(beepers);
+  } catch (error: any) {
+    console.error("Error getting beepers by status:", error);
     res.status(500).json({ error: "Internal server error.🙄" });
   }
 }

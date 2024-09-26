@@ -23,7 +23,6 @@ export const readFromJsonFile = () => __awaiter(void 0, void 0, void 0, function
 //UPDATE
 export const editBeeperToJsonFile = (beeper, editedBeeper) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
-    console.log(editedBeeper);
     const oldBeeperIndex = beepers.findIndex((b) => b.id === beeper.id);
     beepers[oldBeeperIndex] = editedBeeper;
     yield jsonfile.writeFile(DB_FILE_PATH, beepers);

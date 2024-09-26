@@ -7,10 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { deleteBeeper, promoteStatusToJson, getBeeperByIDFromJson, getAllBeepersFromJson, createBeeperToJsonFile } from "../services/beeperService.js";
+import { deleteBeeper, promoteStatusToJson, getBeepersByStatusFromJson, getBeeperByIDFromJson, getAllBeepersFromJson, createBeeperToJsonFile } from "../services/beeperService.js";
 export const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const name = req.body;
+        const name = req.body.name;
         if (!name) {
             res.status(400).json({ error: "name is required" });
             return;
@@ -73,6 +73,17 @@ export const deleteById = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (error) {
         console.error("Error deleting beeper:", error);
+        res.status(500).json({ error: "Internal server error.🙄" });
+    }
+});
+export const getBeepersByStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { status } = req.params;
+        const beepers = yield getBeepersByStatusFromJson(status);
+        res.status(200).json(beepers);
+    }
+    catch (error) {
+        console.error("Error getting beepers by status:", error);
         res.status(500).json({ error: "Internal server error.🙄" });
     }
 });
