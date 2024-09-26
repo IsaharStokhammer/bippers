@@ -4,8 +4,8 @@ export interface Beeper {
     status : Status,
     createTime : Date,
     explosionTime : Date,
-    lonPoint : Number,
-    latPoint : Number
+    lonPoint? : Number,
+    latPoint? : Number
 }
 export enum Status {
     manufactured, //יוצר
