@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Status } from "../models/types";
 import { v4 as uuidv4 } from "uuid";
-import { writeBeeperToJsonFile, readFromJsonFile, editBeeperToJsonFile } from "../DAL/jsonBeepers.js";
+import { writeBeeperToJsonFile, readFromJsonFile, editBeeperToJsonFile, deleteBeeperFromJson } from "../DAL/jsonBeepers.js";
 //CREATE
 export const createBeeper = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
@@ -40,6 +40,10 @@ export const getBeeperByID = (beeperId) => __awaiter(void 0, void 0, void 0, fun
     else
         return -1;
 });
+export const getBeepersByStatus = (status) => __awaiter(void 0, void 0, void 0, function* () {
+    const beepers = yield getAllBeepers();
+    return beepers.filter((b) => b.status === status);
+});
 //UPDATE
 export const promoteStatus = (id, LAT, LON) => __awaiter(void 0, void 0, void 0, function* () {
     ;
@@ -52,22 +56,17 @@ export const promoteStatus = (id, LAT, LON) => __awaiter(void 0, void 0, void 0,
         if (currentStatus < 4) {
             beeper.status == currentStatus + 1;
             beeper.explosionTime = new Date();
-            if (LAT) {
-                beeper.latPoint = LAT;
-            }
-            if (LON) {
-                beeper.lonPoint = LON;
-            }
+            beeper.lonPoint = LON;
+            beeper.latPoint = LAT;
             yield editBeeperToJsonFile(beeper, beeper);
             return `status promoted to ${currentStatus + 1} `;
         }
         else if (currentStatus == 4) {
-            if (beeper.latPoint && beeper.lonPoint) {
-                if (isInLebanon(beeper.latPoint, beeper.lonPoint))
-                    ;
-                {
-                    return `status promoted to ${currentStatus + 1} `;
-                }
+            if (isInLebanon(LAT, LON)) {
+                return `status promoted to ${currentStatus + 1} `;
+            }
+            else {
+                return "invalid coordinates";
             }
         }
         else {
@@ -78,3 +77,8 @@ export const promoteStatus = (id, LAT, LON) => __awaiter(void 0, void 0, void 0,
 export const isInLebanon = (LAT, LON) => {
     return true;
 };
+//DELETE
+export const deleteBeeper = (beeperId) => __awaiter(void 0, void 0, void 0, function* () {
+    const beeper = yield getBeeperByID(beeperId);
+    yield deleteBeeperFromJson(beeper);
+});

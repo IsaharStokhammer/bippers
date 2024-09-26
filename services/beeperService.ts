@@ -43,6 +43,11 @@ import {
     else return -1;
   }
 
+  export const getBeepersByStatus = async (status: Status): Promise<Beeper[]> => {
+    const beepers : Beeper[]  = await getAllBeepers();
+    return beepers.filter((b) => b.status === status);
+  }
+
   //UPDATE
 export const promoteStatus = async (id : string, LAT? : Number, LON? : Number): Promise<string> => {;
     const beeper =await getBeeperByID(id);
@@ -54,26 +59,32 @@ export const promoteStatus = async (id : string, LAT? : Number, LON? : Number): 
         if (currentStatus < 4){
             (beeper as Beeper).status == currentStatus+1;
             (beeper as Beeper).explosionTime = new Date();
-            if (LAT){
-                (beeper as Beeper).latPoint = LAT;
-            }
-            if (LON){                
-                (beeper as Beeper).lonPoint = LON;
-            }
+            (beeper as Beeper).lonPoint = LON;
+            (beeper as Beeper).latPoint = LAT;
             await editBeeperToJsonFile((beeper as Beeper),(beeper as Beeper));
             return `status promoted to ${currentStatus+1} `
         }
         else if(currentStatus == 4){ 
-            if ((beeper as Beeper).latPoint && (beeper as Beeper).lonPoint){
-                if (isInLebanon((beeper as Beeper).latPoint , (beeper as Beeper).lonPoint))){
-                    return `status promoted to ${currentStatus+1} `
-                }
+            if (isInLebanon(LAT , LON)){
+                return `status promoted to ${currentStatus+1} `;
+            }
+            else{
+                return "invalid coordinates";
             }
         }
-        else{ return "the beepers status are already at the highest level"}
+        else{
+             return "the beepers status are already at the highest level"
+        }
     }
 }
 
-export const isInLebanon = (LAT: Number, LON: Number):boolean => {
+export const isInLebanon = (LAT: Number |undefined, LON: Number | undefined):boolean => {
     return true
 }
+
+//DELETE
+export const deleteBeeper = async (beeperId: string): Promise<void> => {
+    const beeper = await getBeeperByID(beeperId);
+    await deleteBeeperFromJson(beeper as Beeper);
+}
+
