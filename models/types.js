@@ -1,8 +1,8 @@
 export var Status;
 (function (Status) {
-    Status[Status["manufactured"] = 0] = "manufactured";
-    Status[Status["assembled"] = 1] = "assembled";
-    Status[Status["shipped"] = 2] = "shipped";
-    Status[Status["deployed"] = 3] = "deployed";
-    Status[Status["detonated"] = 4] = "detonated"; //התפוצץ
+    Status[Status["manufactured"] = 1] = "manufactured";
+    Status[Status["assembled"] = 2] = "assembled";
+    Status[Status["shipped"] = 3] = "shipped";
+    Status[Status["deployed"] = 4] = "deployed";
+    Status[Status["detonated"] = 5] = "detonated"; //התפוצץ
 })(Status || (Status = {}));

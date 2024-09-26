@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Status } from "../models/types";
 import { v4 as uuidv4 } from "uuid";
-import { writeBeeperToJsonFile, readFromJsonFile } from "../DAL/jsonBeepers.js";
+import { writeBeeperToJsonFile, readFromJsonFile, editBeeperToJsonFile } from "../DAL/jsonBeepers.js";
+//CREATE
 export const createBeeper = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
     const existingBeeper = beepers.find((b) => b.name === name);
@@ -26,3 +27,54 @@ export const createBeeper = (name) => __awaiter(void 0, void 0, void 0, function
     yield writeBeeperToJsonFile(newBeeper);
     return newBeeperId;
 });
+//READ
+export const getAllBeepers = () => __awaiter(void 0, void 0, void 0, function* () {
+    return yield readFromJsonFile();
+});
+export const getBeeperByID = (beeperId) => __awaiter(void 0, void 0, void 0, function* () {
+    const beepers = yield getAllBeepers();
+    const beeper = beepers.find((b) => b.id === beeperId);
+    if (beeper) {
+        return beeper;
+    }
+    else
+        return -1;
+});
+//UPDATE
+export const promoteStatus = (id, LAT, LON) => __awaiter(void 0, void 0, void 0, function* () {
+    ;
+    const beeper = yield getBeeperByID(id);
+    if (typeof (beeper) == 'number') {
+        return "beeper dos not exist";
+    }
+    else {
+        const currentStatus = beeper.status;
+        if (currentStatus < 4) {
+            beeper.status == currentStatus + 1;
+            beeper.explosionTime = new Date();
+            if (LAT) {
+                beeper.latPoint = LAT;
+            }
+            if (LON) {
+                beeper.lonPoint = LON;
+            }
+            yield editBeeperToJsonFile(beeper, beeper);
+            return `status promoted to ${currentStatus + 1} `;
+        }
+        else if (currentStatus == 4) {
+            if (beeper.latPoint && beeper.lonPoint) {
+                if (isInLebanon(beeper.latPoint, beeper.lonPoint))
+                    ;
+                {
+                    return `status promoted to ${currentStatus + 1} `;
+                }
+            }
+        }
+        else {
+            return "the beepers status are already at the highest level";
+        }
+    }
+});
+export const isInLebanon = (LAT, LON) => {
+    return true;
+};
