@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import {deleteBeeper, promoteStatus, getBeepersByStatus, getBeeperByID, getAllBeepers, createBeeper} from "../services/beeperService.js";
+import {deleteBeeper, promoteStatusToJson, getBeepersByStatusFromJson, getBeeperByIDFromJson, getAllBeepersFromJson, createBeeperToJsonFile} from "../services/beeperService.js";
 import { Beeper, Status } from "../models/types.js";
 
 
@@ -12,7 +12,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const beeperId = await createBeeper(name);
+    const beeperId = await createBeeperToJsonFile(name);
     res.status(201).json(beeperId);
   } catch (error: any) {
     if (error.message === "name already exists.") {
@@ -23,3 +23,39 @@ export const create = async (req: Request, res: Response): Promise<void> => {
     }
   }
 };
+
+export const getAllBeepers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const beepers = await getAllBeepersFromJson();
+    res.status(200).json(beepers);
+  } catch (error: any) {
+    console.error("Error getting beepers:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+}
+
+export const getBeeperByID = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const beeper = await getBeeperByIDFromJson(id);
+    if (!beeper) {
+      res.status(404).json({ error: "beeper not found 🤔" });
+    } else {
+      res.status(200).json(beeper);
+    }
+  } catch (error: any) {
+    console.error("Error getting beeper:", error);
+    res.status(500).json({ error: "Internal server error.🙄" });
+  }
+}
+
+export const promoteBeeperStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const reponse : string = await promoteStatusToJson(id);
+    res.status(200).json(reponse);
+  } catch (error: any) {
+    console.error("Error promoting beeper status:", error);
+    res.status(500).json({ error: "Internal server error.🙄" });
+  }
+}

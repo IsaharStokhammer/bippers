@@ -11,7 +11,7 @@ import { Status } from "../models/types.js";
 import { v4 as uuidv4 } from "uuid";
 import { writeBeeperToJsonFile, readFromJsonFile, editBeeperToJsonFile, deleteBeeperFromJson } from "../DAL/jsonBeepers.js";
 //CREATE
-export const createBeeper = (name) => __awaiter(void 0, void 0, void 0, function* () {
+export const createBeeperToJsonFile = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
     const existingBeeper = beepers.find((b) => b.name === name);
     if (existingBeeper) {
@@ -28,11 +28,11 @@ export const createBeeper = (name) => __awaiter(void 0, void 0, void 0, function
     return newBeeperId;
 });
 //READ
-export const getAllBeepers = () => __awaiter(void 0, void 0, void 0, function* () {
+export const getAllBeepersFromJson = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield readFromJsonFile();
 });
-export const getBeeperByID = (beeperId) => __awaiter(void 0, void 0, void 0, function* () {
-    const beepers = yield getAllBeepers();
+export const getBeeperByIDFromJson = (beeperId) => __awaiter(void 0, void 0, void 0, function* () {
+    const beepers = yield getAllBeepersFromJson();
     const beeper = beepers.find((b) => b.id === beeperId);
     if (beeper) {
         return beeper;
@@ -40,21 +40,21 @@ export const getBeeperByID = (beeperId) => __awaiter(void 0, void 0, void 0, fun
     else
         return -1;
 });
-export const getBeepersByStatus = (status) => __awaiter(void 0, void 0, void 0, function* () {
-    const beepers = yield getAllBeepers();
+export const getBeepersByStatusFromJson = (status) => __awaiter(void 0, void 0, void 0, function* () {
+    const beepers = yield getAllBeepersFromJson();
     return beepers.filter((b) => b.status === status);
 });
 //UPDATE
-export const promoteStatus = (id, LAT, LON) => __awaiter(void 0, void 0, void 0, function* () {
+export const promoteStatusToJson = (id, LAT, LON) => __awaiter(void 0, void 0, void 0, function* () {
     ;
-    const beeper = yield getBeeperByID(id);
+    const beeper = yield getBeeperByIDFromJson(id);
     if (typeof (beeper) == 'number') {
         return "beeper dos not exist";
     }
     else {
         const currentStatus = beeper.status;
         if (currentStatus < 4) {
-            beeper.status == currentStatus + 1;
+            beeper.status = currentStatus + 1;
             beeper.explosionTime = new Date();
             beeper.lonPoint = LON;
             beeper.latPoint = LAT;
@@ -79,6 +79,6 @@ export const isInLebanon = (LAT, LON) => {
 };
 //DELETE
 export const deleteBeeper = (beeperId) => __awaiter(void 0, void 0, void 0, function* () {
-    const beeper = yield getBeeperByID(beeperId);
+    const beeper = yield getBeeperByIDFromJson(beeperId);
     yield deleteBeeperFromJson(beeper);
 });

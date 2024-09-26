@@ -20,8 +20,8 @@ export const readFromJsonFile = async (): Promise<Beeper[]> => {
 export const editBeeperToJsonFile = async(beeper : Beeper,editedBeeper : Beeper):Promise<void>=>{
   const beepers : Beeper[]  = await readFromJsonFile();
   console.log(editedBeeper)
-  const oldBeeper = beepers.find((b) => b.id === beeper.id);
-  beepers[beepers.indexOf(beeper)] = editedBeeper
+  const oldBeeperIndex = beepers.findIndex((b) => b.id === beeper.id);
+  beepers[oldBeeperIndex] = editedBeeper
   await jsonfile.writeFile(DB_FILE_PATH,beepers)
  }
 

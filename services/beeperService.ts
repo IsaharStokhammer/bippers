@@ -8,7 +8,7 @@ import {
   } from "../DAL/jsonBeepers.js";
 
   //CREATE
-  export const createBeeper = async (name: string): Promise<string> => {
+  export const createBeeperToJsonFile = async (name: string): Promise<string> => {
     const beepers : Beeper[]  = await readFromJsonFile();
     const existingBeeper = beepers.find((b) => b.name === name);
   
@@ -30,12 +30,12 @@ import {
   };
 
   //READ
-  export const getAllBeepers = async (): Promise<Beeper[]> => {
+  export const getAllBeepersFromJson = async (): Promise<Beeper[]> => {
     return await readFromJsonFile();
   }
 
-  export const getBeeperByID = async (beeperId: string): Promise<Beeper | Number> => {
-    const beepers : Beeper[]  = await getAllBeepers();
+  export const getBeeperByIDFromJson = async (beeperId: string): Promise<Beeper | Number> => {
+    const beepers : Beeper[]  = await getAllBeepersFromJson();
     const beeper = beepers.find((b) => b.id === beeperId);
     if (beeper){
         return beeper
@@ -43,21 +43,21 @@ import {
     else return -1;
   }
 
-  export const getBeepersByStatus = async (status: Status): Promise<Beeper[]> => {
-    const beepers : Beeper[]  = await getAllBeepers();
+  export const getBeepersByStatusFromJson = async (status: Status): Promise<Beeper[]> => {
+    const beepers : Beeper[]  = await getAllBeepersFromJson();
     return beepers.filter((b) => b.status === status);
   }
 
   //UPDATE
-export const promoteStatus = async (id : string, LAT? : Number, LON? : Number): Promise<string> => {;
-    const beeper =await getBeeperByID(id);
+export const promoteStatusToJson = async (id : string, LAT? : Number, LON? : Number): Promise<string> => {;
+    const beeper =await getBeeperByIDFromJson(id);
     if (typeof(beeper) == 'number') {
         return "beeper dos not exist"
     }
     else{
         const currentStatus = (beeper as Beeper).status;
         if (currentStatus < 4){
-            (beeper as Beeper).status == currentStatus+1;
+            (beeper as Beeper).status = currentStatus + 1;
             (beeper as Beeper).explosionTime = new Date();
             (beeper as Beeper).lonPoint = LON;
             (beeper as Beeper).latPoint = LAT;
@@ -84,7 +84,7 @@ export const isInLebanon = (LAT: Number |undefined, LON: Number | undefined):boo
 
 //DELETE
 export const deleteBeeper = async (beeperId: string): Promise<void> => {
-    const beeper = await getBeeperByID(beeperId);
+    const beeper = await getBeeperByIDFromJson(beeperId);
     await deleteBeeperFromJson(beeper as Beeper);
 }
 
