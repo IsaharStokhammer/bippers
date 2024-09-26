@@ -47,7 +47,7 @@ const seqToBoom = 10;
 
   export const getBeepersByStatusFromJson = async (status: Status): Promise<Beeper[]> => {
     const beepers : Beeper[]  = await getAllBeepersFromJson();
-    return beepers.filter((b) => b.status == status);
+    return beepers.filter((b) => Status[b.status] == status as unknown);
   }
 
   //UPDATE

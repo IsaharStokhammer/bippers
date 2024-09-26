@@ -44,7 +44,7 @@ export const getBeeperByIDFromJson = (beeperId) => __awaiter(void 0, void 0, voi
 });
 export const getBeepersByStatusFromJson = (status) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield getAllBeepersFromJson();
-    return beepers.filter((b) => b.status == status);
+    return beepers.filter((b) => Status[b.status] == status);
 });
 //UPDATE
 export const promoteStatusToJson = (id, LAT, LON) => __awaiter(void 0, void 0, void 0, function* () {
