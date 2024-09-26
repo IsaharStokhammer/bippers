@@ -1,4 +1,4 @@
-import { Beeper, Status } from "../models/types";
+import { Beeper, Status } from "../models/types.js";
 import { v4 as uuidv4 } from "uuid";
 import {
     writeBeeperToJsonFile,
