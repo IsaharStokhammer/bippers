@@ -19,7 +19,7 @@ export const readFromJsonFile = async (): Promise<Beeper[]> => {
 //UPDATE
 export const editBeeperToJsonFile = async(beeper : Beeper,editedBeeper : Beeper):Promise<void>=>{
   const beepers : Beeper[]  = await readFromJsonFile();
-  
+
   const oldBeeperIndex = beepers.findIndex((b) => b.id === beeper.id);
   beepers[oldBeeperIndex] = editedBeeper
   await jsonfile.writeFile(DB_FILE_PATH,beepers)
@@ -28,6 +28,7 @@ export const editBeeperToJsonFile = async(beeper : Beeper,editedBeeper : Beeper)
  //DELETE
  export const deleteBeeperFromJson = async (beeper : Beeper): Promise<void> => {
     const beepers : Beeper[]  = await readFromJsonFile();
-    beepers.splice(beepers.indexOf(beeper), 1);
+    const beeperIndex : number = beepers.findIndex(b => b.id === beeper.id);
+    beepers.splice(beeperIndex, 1);
     await jsonfile.writeFile(DB_FILE_PATH,beepers);
 };
