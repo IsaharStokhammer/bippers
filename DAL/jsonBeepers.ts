@@ -16,10 +16,15 @@ export const readFromJsonFile = async (): Promise<Beeper[]> => {
 };
 
 export const editBeeperToJsonFile = async(beeper : Beeper,editedBeeper : Beeper):Promise<void>=>{
-
   const beepers : Beeper[]  = await readFromJsonFile();
   console.log(editedBeeper)
   const oldBeeper = beepers.find((b) => b.id === beeper.id);
   beepers[beepers.indexOf(beeper)] = editedBeeper
   await jsonfile.writeFile(DB_FILE_PATH,beepers)
  }
+
+ export const deleteBeeperFromJson = async (beeper : Beeper): Promise<void> => {
+    const beepers : Beeper[]  = await readFromJsonFile();
+    beepers.splice(beepers.indexOf(beeper), 1);
+    await jsonfile.writeFile(DB_FILE_PATH,beepers);
+};

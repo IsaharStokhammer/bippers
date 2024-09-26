@@ -1,9 +1,9 @@
 export interface Beeper {
-    id : Number,
+    id : string,
     name : string,
     status : Status,
     createTime : Date,
-    explosionTime : Date,
+    explosionTime? : Date,
     lonPoint? : Number,
     latPoint? : Number
 }
