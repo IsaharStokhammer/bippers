@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { promoteStatusToJson, getBeeperByIDFromJson, getAllBeepersFromJson, createBeeperToJsonFile } from "../services/beeperService.js";
+import { deleteBeeper, promoteStatusToJson, getBeeperByIDFromJson, getAllBeepersFromJson, createBeeperToJsonFile } from "../services/beeperService.js";
 export const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const name = req.body;
@@ -62,6 +62,17 @@ export const promoteBeeperStatus = (req, res) => __awaiter(void 0, void 0, void 
     }
     catch (error) {
         console.error("Error promoting beeper status:", error);
+        res.status(500).json({ error: "Internal server error.🙄" });
+    }
+});
+export const deleteById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        yield deleteBeeper(id);
+        res.status(204).json();
+    }
+    catch (error) {
+        console.error("Error deleting beeper:", error);
         res.status(500).json({ error: "Internal server error.🙄" });
     }
 });
