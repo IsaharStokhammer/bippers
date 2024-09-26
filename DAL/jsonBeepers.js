@@ -9,15 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import jsonfile from 'jsonfile';
 const DB_FILE_PATH = process.env.DB_FILE_PATH || './data/db.json';
+//CREATE
 export const writeBeeperToJsonFile = (beeper) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield jsonfile.readFile(DB_FILE_PATH);
     beepers.push(beeper);
     yield jsonfile.writeFile(DB_FILE_PATH, beepers);
 });
+//READ
 export const readFromJsonFile = () => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield jsonfile.readFile(DB_FILE_PATH);
     return beepers;
 });
+//UPDATE
 export const editBeeperToJsonFile = (beeper, editedBeeper) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
     console.log(editedBeeper);
@@ -25,6 +28,7 @@ export const editBeeperToJsonFile = (beeper, editedBeeper) => __awaiter(void 0, 
     beepers[beepers.indexOf(beeper)] = editedBeeper;
     yield jsonfile.writeFile(DB_FILE_PATH, beepers);
 });
+//DELETE
 export const deleteBeeperFromJson = (beeper) => __awaiter(void 0, void 0, void 0, function* () {
     const beepers = yield readFromJsonFile();
     beepers.splice(beepers.indexOf(beeper), 1);
